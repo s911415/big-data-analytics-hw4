@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <properties>
+    </properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss} %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+        <!--<File name="FILE" fileName="spark_log.log" append="true" ImmediateFlush="false">-->
+            <!--<PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss} %-5p [%t] %C{2} (%F:%L) - %m%n"/>-->
+        <!--</File>-->
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="STDOUT"/>
+            <!--<AppenderRef ref="FILE" level="info"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
