@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 public abstract class Task {
@@ -19,7 +20,7 @@ public abstract class Task {
     protected static PrintWriter getLogWriter(String name) throws IOException {
         File tmpFile = new File(System.getProperty("java.io.tmpdir"), name + ".log");
         logger.info("Log write to: " + tmpFile.getAbsolutePath());
-        return new PrintWriter(new BufferedWriter(new FileWriter(tmpFile, false)));
-    }
 
+        return new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)));
+    }
 }
