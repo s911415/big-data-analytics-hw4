@@ -87,7 +87,7 @@ public class Task4 extends Task {
         logger.info("Writing result");
 
         try (PrintWriter printWriter = getLogWriter("Task4")) {
-            printWriter.println("Lists the locations with the largest “check-in community”");
+            printWriter.println("Lists the locations with the largest \"check-in community\"");
             printWriter.println("location_id, largest_community_size");
             for (Tuple2<?, ?> tuple : output) {
                 printWriter.println(tuple._1() + ", " + tuple._2());
