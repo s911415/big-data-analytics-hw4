@@ -23,7 +23,7 @@ public class Task4 extends Task {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.err.println("Usage: Task4 <totalCheckins> <edges>");
+            System.err.println("Usage: Task4 <totalCheckins> <edges> [<output dir>]");
             System.exit(1);
         }
 
@@ -77,7 +77,7 @@ public class Task4 extends Task {
             final Integer LOC_ID = v._1;
             final HashSet<Integer> checks = v._2;
             final int maxLen = checks.parallelStream()
-                    .mapToInt(people -> getIntersection(checks, friendList.get(people)).size()).max().orElse(0);
+                    .mapToInt(people -> getIntersectionSize(checks, friendList.get(people))).max().orElse(0);
 
             return new Tuple2<>(LOC_ID, maxLen);
         }).mapToPair(Tuple2::swap).sortByKey(false).mapToPair(Tuple2::swap).collect();
@@ -86,7 +86,7 @@ public class Task4 extends Task {
         logger.info("Task4 Finished");
         logger.info("Writing result");
 
-        try (PrintWriter printWriter = getLogWriter("Task4")) {
+        try (PrintWriter printWriter = getLogWriter("Task4", args.length > 2 ? args[2] : null)) {
             printWriter.println("Lists the locations with the largest \"check-in community\"");
             printWriter.println("location_id, largest_community_size");
             for (Tuple2<?, ?> tuple : output) {
@@ -102,24 +102,9 @@ public class Task4 extends Task {
 
     }
 
-    private static HashSet<Integer> getIntersection(
+    private static Integer getIntersectionSize(
             final Set<Integer> set1, final Set<Integer> set2
     ) {
-        final HashSet<Integer> set = new HashSet<>();
-        if (set1.size() <= set2.size()) {
-            set1.forEach(v -> {
-                if (set2.contains(v)) {
-                    set.add(v);
-                }
-            });
-        } else {
-            set2.forEach(v -> {
-                if (set1.contains(v)) {
-                    set.add(v);
-                }
-            });
-        }
-
-        return set;
+        return set1.stream().mapToInt(x -> set2.contains(x) ? 1 : 0).sum();
     }
 }

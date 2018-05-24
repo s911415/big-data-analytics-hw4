@@ -15,7 +15,7 @@ public class Task2 extends Task {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.err.println("Usage: Task2 <totalCheckins>");
+            System.err.println("Usage: Task2 <totalCheckins> [<output dir>]");
             System.exit(1);
         }
 
@@ -41,7 +41,7 @@ public class Task2 extends Task {
         logger.info("Task2 Finished");
         logger.info("Writing result");
 
-        try (PrintWriter printWriter = getLogWriter("Task2")) {
+        try (PrintWriter printWriter = getLogWriter("Task2", args.length > 1 ? args[1] : null)) {
             printWriter.println("Lists the top checked-in users");
             printWriter.println("user_id, freq");
             for (Tuple2<?, ?> tuple : output) {

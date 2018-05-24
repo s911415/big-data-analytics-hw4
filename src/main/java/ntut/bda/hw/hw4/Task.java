@@ -18,7 +18,13 @@ public abstract class Task {
     protected static final int IDX_LOCATION = 4;
 
     protected static PrintWriter getLogWriter(String name) throws IOException {
-        File tmpFile = new File(System.getProperty("java.io.tmpdir"), name + ".log");
+        return getLogWriter(name, System.getProperty("java.io.tmpdir"));
+    }
+
+    protected static PrintWriter getLogWriter(String name, String parent) throws IOException {
+        if (parent == null) return getLogWriter(name);
+
+        File tmpFile = new File(parent, name + ".log");
         logger.info("Log write to: " + tmpFile.getAbsolutePath());
 
         return new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)));

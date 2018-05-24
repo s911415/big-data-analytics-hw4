@@ -16,7 +16,7 @@ public class Task3 extends Task {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 1) {
-            System.err.println("Usage: Task3 <totalCheckins>");
+            System.err.println("Usage: Task3 <totalCheckins> [<output dir>]");
             System.exit(1);
         }
 
@@ -48,7 +48,7 @@ public class Task3 extends Task {
 
         final Function<Integer, String> mapHour = (h) -> String.format("[%02d:00, %02d:00)", h, h + 1);
 
-        try (PrintWriter printWriter = getLogWriter("Task3")) {
+        try (PrintWriter printWriter = getLogWriter("Task3", args.length > 1 ? args[1] : null)) {
             printWriter.println("Lists the most popular time for check-ins");
             printWriter.println("hour, freq");
             for (Tuple2<Integer, Integer> tuple : output) {
