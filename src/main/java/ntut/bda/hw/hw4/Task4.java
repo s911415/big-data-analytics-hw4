@@ -77,7 +77,11 @@ public class Task4 extends Task {
             final Integer LOC_ID = v._1;
             final HashSet<Integer> checks = v._2;
             final int maxLen = checks.parallelStream()
-                    .mapToInt(people -> getIntersectionSize(checks, friendList.get(people))).max().orElse(0);
+                    .mapToInt(people -> {
+                        int len = getIntersectionSize(checks, friendList.get(people));
+                        if (len > 0) return ++len;
+                        return 0;
+                    }).max().orElse(0);
 
             return new Tuple2<>(LOC_ID, maxLen);
         }).mapToPair(Tuple2::swap).sortByKey(false).mapToPair(Tuple2::swap).collect();
@@ -105,6 +109,11 @@ public class Task4 extends Task {
     private static Integer getIntersectionSize(
             final Set<Integer> set1, final Set<Integer> set2
     ) {
-        return set1.stream().mapToInt(x -> set2.contains(x) ? 1 : 0).sum();
+        if (set1.size() < set2.size()) {
+            return set1.parallelStream().mapToInt(x -> set2.contains(x) ? 1 : 0).sum();
+        } else {
+            return set2.parallelStream().mapToInt(x -> set1.contains(x) ? 1 : 0).sum();
+        }
+
     }
 }
