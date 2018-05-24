@@ -73,8 +73,10 @@ public class Task4 extends Task {
         final List<Tuple2<Integer, Integer>> output = locationAndUsers.mapToPair((v) -> {
             final Integer LOC_ID = v._1;
             final HashSet<Integer> checks = v._2;
+            final HashSet<Integer> hasTraversal = new HashSet<>();
             final int maxLen = checks.parallelStream()
                     .mapToInt(people -> {
+                        if(hasTraversal.contains(people)) return 0;
                         final HashSet<Integer> triedSet = new HashSet<>();
                         final Queue<Integer> queue = new LinkedList<>();
                         triedSet.add(people);
@@ -91,6 +93,7 @@ public class Task4 extends Task {
                             }
                         }
 
+                        hasTraversal.addAll(triedSet);
                         return triedSet.size();
                     }).max().orElse(0);
 
