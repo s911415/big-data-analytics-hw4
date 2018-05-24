@@ -8,7 +8,6 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
 
 public class Task2 extends Task {
@@ -28,9 +27,9 @@ public class Task2 extends Task {
         logger.info("Task2 Running");
         JavaRDD<String> lines = spark.read().textFile(args[0]).javaRDD();
 
-        List<Tuple2<String, Integer>> output =
+        List<Tuple2<Integer, Integer>> output =
                 lines
-                        .map(s -> Arrays.asList(TAB.split(s)).get(IDX_USER_ID))
+                        .map(s -> Integer.valueOf(TAB.split(s)[IDX_USER_ID]))
                         .mapToPair(s -> new Tuple2<>(s, 1))
                         .reduceByKey((i1, i2) -> i1 + i2)
                         .mapToPair(Tuple2::swap)

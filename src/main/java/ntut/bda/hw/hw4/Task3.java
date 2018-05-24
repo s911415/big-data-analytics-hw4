@@ -8,8 +8,8 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public class Task3 extends Task {
     private static final Logger logger = LogManager.getLogger(Task3.class);
@@ -28,12 +28,12 @@ public class Task3 extends Task {
         logger.info("Task3 Running");
         JavaRDD<String> lines = spark.read().textFile(args[0]).javaRDD();
 
-        List<Tuple2<String, Integer>> output =
+        List<Tuple2<Integer, Integer>> output =
                 lines
                         .map(s ->
-                                Arrays.asList(TAB.split(s))
-                                        .get(IDX_CHK_TIME)
-                                        .substring(11, 13)
+                                Integer.valueOf(
+                                        TAB.split(s)[IDX_CHK_TIME].substring(11, 13)
+                                )
                         )
                         .mapToPair(s -> new Tuple2<>(s, 1))
                         .reduceByKey((i1, i2) -> i1 + i2)
@@ -46,11 +46,13 @@ public class Task3 extends Task {
         logger.info("Task3 Finished");
         logger.info("Writing result");
 
+        final Function<Integer, String> mapHour = (h) -> String.format("[%02d:00, %02d:00)", h, h + 1);
+
         try (PrintWriter printWriter = getLogWriter("Task3")) {
             printWriter.println("Lists the most popular time for check-ins");
             printWriter.println("hour, freq");
-            for (Tuple2<?, ?> tuple : output) {
-                printWriter.println(tuple._1() + ", " + tuple._2());
+            for (Tuple2<Integer, Integer> tuple : output) {
+                printWriter.println(mapHour.apply(tuple._1()) + ", " + tuple._2());
             }
 
             printWriter.flush();
