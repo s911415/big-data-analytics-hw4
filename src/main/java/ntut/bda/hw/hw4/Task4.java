@@ -11,10 +11,7 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Task4 extends Task {
     private static final Logger logger = LogManager.getLogger(Task4.class);
@@ -78,9 +75,23 @@ public class Task4 extends Task {
             final HashSet<Integer> checks = v._2;
             final int maxLen = checks.parallelStream()
                     .mapToInt(people -> {
-                        int len = getIntersectionSize(checks, friendList.get(people));
-                        if (len > 0) return ++len;
-                        return 0;
+                        final HashSet<Integer> triedSet = new HashSet<>();
+                        final Queue<Integer> queue = new LinkedList<>();
+                        triedSet.add(people);
+                        queue.add(people);
+                        Integer f = null;
+                        while ((f = queue.poll()) != null) {
+                            if (friendList.containsKey((f))) {
+                                friendList.get(f).stream() // f's friends
+                                        .filter(i -> checks.contains(i) && !triedSet.contains(i))
+                                        .forEach(i -> {
+                                            triedSet.add(i);
+                                            queue.add(i);
+                                        });
+                            }
+                        }
+
+                        return triedSet.size();
                     }).max().orElse(0);
 
             return new Tuple2<>(LOC_ID, maxLen);
